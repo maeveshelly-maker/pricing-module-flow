@@ -26,6 +26,7 @@
   <h2>⚑ New to build for V1</h2>
   <p><code>Carrier_Association.Preferred_Price_Book__c</code> lookup field · <code>PricebookEntry.Floor__c</code> / <code>Ceiling__c</code> custom fields · a Flow to default the Pricebook · the Proposal/RFP stage-gate validation rule · a Slack-routed Approval Process for out-of-range pricing.</p>
   <p style="margin-top:6px"><strong>Both new fields are manual, not automated.</strong> Preferred_Price_Book__c is set once per carrier by whoever owns that negotiation. PricebookEntry rates are hand-entered from the actual contract terms — nothing here auto-computes a price.</p>
+  <p style="margin-top:6px"><strong>Changing a floor/ceiling or negotiated rate:</strong> edit access restricted to Nick/Martha via a permission set, with Field History Tracking on — tracked, not approval-gated. Changes aren't retroactive: a deal already quoted keeps the range it was checked against at the time; the live PricebookEntry is always "current," not versioned per deal.</p>
 </div>
 <div class="wrap">
 <svg viewBox="0 0 1500 970" xmlns="http://www.w3.org/2000/svg" style="min-width:1180px;width:100%;height:auto;">
