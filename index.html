@@ -27,29 +27,30 @@
   <p><code>Carrier_Association.Preferred_Price_Book__c</code> lookup field · <code>PricebookEntry.Floor__c</code> / <code>Ceiling__c</code> custom fields · a Flow to default the Pricebook · the Proposal/RFP stage-gate validation rule · a Slack-routed Approval Process for out-of-range pricing.</p>
   <p style="margin-top:6px"><strong>Both new fields are manual, not automated.</strong> Preferred_Price_Book__c is set once per carrier by whoever owns that negotiation. PricebookEntry rates are hand-entered from the actual contract terms — nothing here auto-computes a price.</p>
   <p style="margin-top:6px"><strong>Changing a floor/ceiling or negotiated rate:</strong> edit access restricted to Nick/Martha via a permission set, with Field History Tracking on — tracked, not approval-gated. Changes aren't retroactive: a deal already quoted keeps the range it was checked against at the time; the live PricebookEntry is always "current," not versioned per deal.</p>
+  <p style="margin-top:6px"><strong>Flow vs. validation rule:</strong> deciding <em>which</em> Pricebook applies has to be a Flow — it sets a value (Opportunity.Pricebook2Id), which a validation rule can't do. Checking whether the entered price is within Floor__c/Ceiling__c is the validation rule's job — a pure block/allow check. Either way, the actual rate + floor + ceiling for a carrier still has to be entered by Nick/Martha — the validation rule enforces against that data, it doesn't replace the need to build it.</p>
 </div>
 <div class="wrap">
-<svg viewBox="0 0 1500 970" xmlns="http://www.w3.org/2000/svg" style="min-width:1180px;width:100%;height:auto;">
+<svg viewBox="0 0 1500 1100" xmlns="http://www.w3.org/2000/svg" style="min-width:1180px;width:100%;height:auto;">
   <defs>
     <marker id="a"  markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L8,3.5 z" fill="#999"/></marker>
     <marker id="ag" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L8,3.5 z" fill="#16a34a"/></marker>
     <marker id="ab" markerWidth="8" markerHeight="7" refX="7" refY="3.5" orient="auto"><path d="M0,0 L0,7 L8,3.5 z" fill="#2563eb"/></marker>
   </defs>
 
-  <rect width="1500" height="970" fill="#f8f8f8" rx="12"/>
+  <rect width="1500" height="1100" fill="#f8f8f8" rx="12"/>
 
   <!-- ════ LANE BACKGROUNDS ════ -->
   <rect x="20" y="56" width="1460" height="220" rx="10" fill="#f0f4ff" stroke="#c7d2fe" stroke-width="1"/>
   <text x="36" y="80" font-size="12" font-weight="700" fill="#4338ca">PRICING SETUP  ·  configured once per carrier relationship</text>
 
-  <rect x="20" y="300" width="1460" height="630" rx="10" fill="#eefdf3" stroke="#bbf7d0" stroke-width="1"/>
+  <rect x="20" y="300" width="1460" height="800" rx="10" fill="#eefdf3" stroke="#bbf7d0" stroke-width="1"/>
   <text x="36" y="324" font-size="12" font-weight="700" fill="#15803d">DEAL FLOW  ·  Proposal / RFP stage gate</text>
 
   <!-- ════ LANE A: PRICING SETUP ════ -->
   <rect x="50" y="140" width="190" height="56" rx="8" fill="#4f46e5"/>
   <text x="145" y="163" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Carrier Association</text>
-  <text x="145" y="180" text-anchor="middle" font-size="9" fill="#c7d2fe">junction: Opportunity ↔ Carrier</text>
-  <circle cx="62" cy="152" r="5" fill="#4b5563"/>
+  <text x="145" y="180" text-anchor="middle" font-size="9" fill="#c7d2fe">junction: Opportunity ↔ Carrier · rep-created</text>
+  <circle cx="62" cy="152" r="5" fill="#2563eb"/>
 
   <line x1="240" y1="168" x2="270" y2="168" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
 
@@ -83,8 +84,8 @@
   <!-- relationship lines down to deal flow -->
   <path d="M380,196 L380,340 L360,340 L360,360" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#ab)"/>
   <path d="M615,196 L615,340 L605,340 L605,360" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#ab)"/>
-  <path d="M1090,196 L1090,440 L770,440 L770,470" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#ab)"/>
-  <text x="900" y="430" text-anchor="middle" font-size="9" font-weight="600" fill="#2563eb">guardrail</text>
+  <path d="M1090,196 L1090,630 L650,630 L650,660" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#ab)"/>
+  <text x="870" y="620" text-anchor="middle" font-size="9" font-weight="600" fill="#2563eb">guardrail</text>
   <text x="625" y="344" text-anchor="start" font-size="9" font-weight="600" fill="#2563eb">auto-applies to every deal — no manual pick required</text>
 
   <!-- ════ LANE B: DEAL FLOW ════ -->
@@ -96,73 +97,90 @@
   <line x1="220" y1="388" x2="250" y2="388" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
 
   <rect x="250" y="360" width="220" height="56" rx="8" fill="#fff" stroke="#15803d" stroke-width="1.5"/>
-  <text x="360" y="383" text-anchor="middle" font-size="11" font-weight="600" fill="#111">Flow reads preferred book</text>
-  <text x="360" y="400" text-anchor="middle" font-size="9" fill="#6b7280">checks Carrier Association field</text>
+  <text x="360" y="383" text-anchor="middle" font-size="11" font-weight="600" fill="#111">Flow checks Carrier Association</text>
+  <text x="360" y="400" text-anchor="middle" font-size="9" fill="#6b7280">reads Preferred_Price_Book__c</text>
   <circle cx="262" cy="372" r="5" fill="#0d9488"/>
 
-  <line x1="470" y1="388" x2="500" y2="388" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
+  <line x1="360" y1="416" x2="360" y2="440" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
 
-  <rect x="500" y="360" width="210" height="56" rx="8" fill="#15803d"/>
-  <text x="605" y="383" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Pricebook defaults</text>
-  <text x="605" y="400" text-anchor="middle" font-size="9" fill="#bbf7d0">Standard, unless carrier override</text>
-  <circle cx="512" cy="372" r="5" fill="#0d9488"/>
+  <polygon points="360,440 450,482 360,524 270,482" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="360" y="478" text-anchor="middle" font-size="10" font-weight="700" fill="#92400e">Carrier has preferred</text>
+  <text x="360" y="491" text-anchor="middle" font-size="10" font-weight="700" fill="#92400e">pricing?</text>
+  <circle cx="360" cy="450" r="5" fill="#0d9488"/>
 
-  <line x1="605" y1="416" x2="630" y2="470" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M270,482 L220,482 L220,560" fill="none" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
+  <text x="240" y="472" text-anchor="middle" font-size="10" font-weight="600" fill="#374151">yes</text>
 
-  <rect x="490" y="470" width="280" height="56" rx="8" fill="#0d9488"/>
-  <text x="630" y="493" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Rep adds line item(s)</text>
-  <text x="630" y="510" text-anchor="middle" font-size="9" fill="#99f6e4">anchor exposure type required to advance</text>
-  <circle cx="502" cy="482" r="5" fill="#2563eb"/>
+  <path d="M450,482 L590,482 L590,560" fill="none" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
+  <text x="530" y="472" text-anchor="middle" font-size="10" font-weight="600" fill="#374151">no</text>
 
-  <line x1="630" y1="526" x2="630" y2="550" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
+  <rect x="90" y="560" width="260" height="56" rx="8" fill="#fff" stroke="#0d9488" stroke-width="1.5"/>
+  <text x="220" y="583" text-anchor="middle" font-size="11" font-weight="600" fill="#111">Defaults to carrier's Pricebook</text>
+  <text x="220" y="600" text-anchor="middle" font-size="9" fill="#6b7280">e.g. Accelerant's negotiated book</text>
+  <circle cx="102" cy="572" r="5" fill="#0d9488"/>
 
-  <polygon points="630,550 720,595 630,640 540,595" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
-  <text x="630" y="591" text-anchor="middle" font-size="10.5" font-weight="700" fill="#92400e">Within floor / ceiling?</text>
-  <text x="630" y="606" text-anchor="middle" font-size="8" fill="#b45309">checked vs PricebookEntry</text>
-  <circle cx="630" cy="561" r="5" fill="#0d9488"/>
+  <rect x="470" y="560" width="240" height="56" rx="8" fill="#fff" stroke="#0d9488" stroke-width="1.5"/>
+  <text x="590" y="583" text-anchor="middle" font-size="11" font-weight="600" fill="#111">Defaults to Standard Pricebook</text>
+  <text x="590" y="600" text-anchor="middle" font-size="9" fill="#6b7280">the default for everyone else</text>
+  <circle cx="482" cy="572" r="5" fill="#0d9488"/>
 
-  <path d="M540,595 L370,595 L370,700" fill="none" stroke="#16a34a" stroke-width="2" marker-end="url(#ag)"/>
-  <text x="455" y="586" text-anchor="middle" font-size="10" font-weight="600" fill="#16a34a">yes · within range</text>
+  <path d="M220,616 L220,640 L420,640 L420,660" fill="none" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M590,616 L590,660" fill="none" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
 
-  <path d="M720,595 L900,595 L900,700" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#a)"/>
-  <text x="810" y="586" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">no · out of range</text>
+  <rect x="350" y="660" width="340" height="56" rx="8" fill="#0d9488"/>
+  <text x="520" y="683" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Rep adds line item(s)</text>
+  <text x="520" y="700" text-anchor="middle" font-size="9" fill="#99f6e4">anchor exposure type required to advance</text>
+  <circle cx="362" cy="672" r="5" fill="#2563eb"/>
 
-  <rect x="250" y="700" width="240" height="56" rx="8" fill="#15803d"/>
-  <text x="370" y="723" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Stage gate passes</text>
-  <text x="370" y="740" text-anchor="middle" font-size="9" fill="#bbf7d0">opportunity advances to next stage</text>
-  <circle cx="262" cy="712" r="5" fill="#0d9488"/>
+  <line x1="520" y1="716" x2="520" y2="740" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
 
-  <rect x="770" y="700" width="260" height="56" rx="8" fill="#7c3aed"/>
-  <text x="900" y="723" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Approval process</text>
-  <text x="900" y="740" text-anchor="middle" font-size="9" fill="#ddd6fe">Slack: Nick &amp; Martha decide</text>
-  <circle cx="782" cy="712" r="5" fill="#0d9488"/>
+  <polygon points="520,740 610,785 520,830 430,785" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="520" y="781" text-anchor="middle" font-size="10.5" font-weight="700" fill="#92400e">Within floor / ceiling?</text>
+  <text x="520" y="796" text-anchor="middle" font-size="8" fill="#b45309">checked vs PricebookEntry</text>
+  <circle cx="520" cy="751" r="5" fill="#0d9488"/>
 
-  <line x1="900" y1="756" x2="900" y2="798" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
+  <path d="M430,785 L260,785 L260,890" fill="none" stroke="#16a34a" stroke-width="2" marker-end="url(#ag)"/>
+  <text x="345" y="776" text-anchor="middle" font-size="10" font-weight="600" fill="#16a34a">yes · within range</text>
 
-  <polygon points="900,798 985,840 900,882 815,840" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
-  <text x="900" y="836" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">Approved?</text>
-  <text x="900" y="851" text-anchor="middle" font-size="8" fill="#b45309">Nick or Martha decides</text>
-  <circle cx="900" cy="806" r="5" fill="#7c3aed"/>
+  <path d="M610,785 L790,785 L790,890" fill="none" stroke="#7c3aed" stroke-width="2" marker-end="url(#a)"/>
+  <text x="700" y="776" text-anchor="middle" font-size="10" font-weight="600" fill="#dc2626">no · out of range</text>
 
-  <path d="M815,840 L440,840 L440,756" fill="none" stroke="#16a34a" stroke-width="2" marker-end="url(#ag)"/>
-  <text x="600" y="831" text-anchor="middle" font-size="10" font-weight="600" fill="#16a34a">approved</text>
+  <rect x="250" y="890" width="240" height="56" rx="8" fill="#15803d"/>
+  <text x="370" y="913" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Stage gate passes</text>
+  <text x="370" y="930" text-anchor="middle" font-size="9" fill="#bbf7d0">opportunity advances to next stage</text>
+  <circle cx="262" cy="902" r="5" fill="#0d9488"/>
 
-  <circle cx="1000" cy="845" r="5" fill="#2563eb"/>
-  <text x="1010" y="845" text-anchor="start" font-size="10" font-weight="600" fill="#dc2626">↻ no: rep revises &amp; resubmits</text>
-  <text x="1010" y="860" text-anchor="start" font-size="9" fill="#b45309">back to the line-item step above</text>
+  <rect x="770" y="890" width="260" height="56" rx="8" fill="#7c3aed"/>
+  <text x="900" y="913" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Approval process</text>
+  <text x="900" y="930" text-anchor="middle" font-size="9" fill="#ddd6fe">Slack: Nick &amp; Martha decide</text>
+  <circle cx="782" cy="902" r="5" fill="#0d9488"/>
+
+  <line x1="900" y1="946" x2="900" y2="988" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
+
+  <polygon points="900,988 985,1030 900,1072 815,1030" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="900" y="1026" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">Approved?</text>
+  <text x="900" y="1041" text-anchor="middle" font-size="8" fill="#b45309">Nick or Martha decides</text>
+  <circle cx="900" cy="996" r="5" fill="#7c3aed"/>
+
+  <path d="M815,1030 L440,1030 L440,946" fill="none" stroke="#16a34a" stroke-width="2" marker-end="url(#ag)"/>
+  <text x="600" y="1021" text-anchor="middle" font-size="10" font-weight="600" fill="#16a34a">approved</text>
+
+  <circle cx="1000" cy="1035" r="5" fill="#2563eb"/>
+  <text x="1010" y="1035" text-anchor="start" font-size="10" font-weight="600" fill="#dc2626">↻ no: rep revises &amp; resubmits</text>
+  <text x="1010" y="1050" text-anchor="start" font-size="9" fill="#b45309">back to the line-item step above</text>
 
   <!-- ════ LEGEND (in-canvas) ════ -->
-  <rect x="1090" y="660" width="340" height="140" rx="8" fill="#fff" stroke="#e5e7eb" stroke-width="1"/>
-  <text x="1104" y="678" font-size="10" font-weight="700" fill="#374151">Who owns each step</text>
-  <circle cx="1104" cy="694" r="5" fill="#2563eb"/>
-  <text x="1118" y="697" font-size="9" fill="#374151">BD rep — happens per deal</text>
-  <circle cx="1104" cy="714" r="5" fill="#4b5563"/>
-  <text x="1118" y="717" font-size="9" fill="#374151">RevOps / Commercial — one-time per carrier</text>
-  <circle cx="1104" cy="734" r="5" fill="#0d9488"/>
-  <text x="1118" y="737" font-size="9" fill="#374151">Automated — no human involved</text>
-  <circle cx="1104" cy="754" r="5" fill="#7c3aed"/>
-  <text x="1118" y="757" font-size="9" fill="#374151">Nick or Martha — decides on flagged deals</text>
-  <text x="1104" y="778" font-size="8" fill="#9ca3af">dot color = who acts at that step</text>
+  <rect x="1090" y="850" width="340" height="140" rx="8" fill="#fff" stroke="#e5e7eb" stroke-width="1"/>
+  <text x="1104" y="868" font-size="10" font-weight="700" fill="#374151">Who owns each step</text>
+  <circle cx="1104" cy="884" r="5" fill="#2563eb"/>
+  <text x="1118" y="887" font-size="9" fill="#374151">BD rep — happens per deal</text>
+  <circle cx="1104" cy="904" r="5" fill="#4b5563"/>
+  <text x="1118" y="907" font-size="9" fill="#374151">RevOps / Commercial — one-time per carrier</text>
+  <circle cx="1104" cy="924" r="5" fill="#0d9488"/>
+  <text x="1118" y="927" font-size="9" fill="#374151">Automated — no human involved</text>
+  <circle cx="1104" cy="944" r="5" fill="#7c3aed"/>
+  <text x="1118" y="947" font-size="9" fill="#374151">Nick or Martha — decides on flagged deals</text>
+  <text x="1104" y="968" font-size="8" fill="#9ca3af">dot color = who acts at that step</text>
 </svg>
 </div>
 </body>
