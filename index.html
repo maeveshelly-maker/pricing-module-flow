@@ -24,7 +24,7 @@
 <p class="sub">Products &amp; Price Books, no CPQ · Proposal/RFP stage gate · Updated July 2026</p>
 <div class="open-q">
   <h2>⚑ New to build for V1</h2>
-  <p><code>Carrier_Association.Preferred_Price_Book__c</code> lookup field · <code>PricebookEntry.Floor__c</code> / <code>Ceiling__c</code> custom fields · a Flow to default the Pricebook · the Proposal/RFP stage-gate validation rule · a Slack-routed Approval Process for out-of-range pricing.</p>
+  <p><code>Carrier_Association.Preferred_Price_Book__c</code> lookup field · <code>PricebookEntry.Floor__c</code> / <code>Ceiling__c</code> custom fields · a Flow to default the Pricebook · a validation rule guarding against manual Pricebook override · the Proposal/RFP stage-gate validation rule · a Slack-routed Approval Process for out-of-range pricing.</p>
   <p style="margin-top:6px"><strong>Both new fields are manual, not automated.</strong> Preferred_Price_Book__c is set once per carrier by whoever owns that negotiation. PricebookEntry rates are hand-entered from the actual contract terms — nothing here auto-computes a price.</p>
   <p style="margin-top:6px"><strong>Changing a floor/ceiling or negotiated rate:</strong> edit access restricted to Nick/Martha via a permission set, with Field History Tracking on — tracked, not approval-gated. Changes aren't retroactive: a deal already quoted keeps the range it was checked against at the time; the live PricebookEntry is always "current," not versioned per deal.</p>
   <p style="margin-top:6px"><strong>Flow vs. validation rule:</strong> deciding <em>which</em> Pricebook applies has to be a Flow — it sets a value (Opportunity.Pricebook2Id), which a validation rule can't do. Checking whether the entered price is within Floor__c/Ceiling__c is the validation rule's job — a pure block/allow check. Either way, the actual rate + floor + ceiling for a carrier still has to be entered by Nick/Martha — the validation rule enforces against that data, it doesn't replace the need to build it.</p>
@@ -126,6 +126,12 @@
 
   <path d="M220,616 L220,640 L420,640 L420,660" fill="none" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
   <path d="M590,616 L590,660" fill="none" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
+
+  <rect x="730" y="560" width="340" height="64" rx="8" fill="#fff" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="900" y="580" text-anchor="middle" font-size="10.5" font-weight="700" fill="#111">Validation rule — ongoing guard</text>
+  <text x="900" y="596" text-anchor="middle" font-size="8.5" fill="#6b7280">blocks save if Pricebook2Id ≠ carrier's required book</text>
+  <text x="900" y="610" text-anchor="middle" font-size="8.5" fill="#6b7280">catches a manual override after the Flow sets it</text>
+  <circle cx="742" cy="572" r="5" fill="#0d9488"/>
 
   <rect x="350" y="660" width="340" height="56" rx="8" fill="#0d9488"/>
   <text x="520" y="683" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Rep adds line item(s)</text>
