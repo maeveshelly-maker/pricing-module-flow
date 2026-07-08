@@ -28,6 +28,7 @@
   <p style="margin-top:6px"><strong>Both new fields are manual, not automated.</strong> Preferred_Price_Book__c is set once per carrier by whoever owns that negotiation. PricebookEntry rates are hand-entered from the actual contract terms — nothing here auto-computes a price.</p>
   <p style="margin-top:6px"><strong>Changing a floor/ceiling or negotiated rate:</strong> edit access restricted to Nick/Martha via a permission set, with Field History Tracking on — tracked, not approval-gated. Changes aren't retroactive: a deal already quoted keeps the range it was checked against at the time; the live PricebookEntry is always "current," not versioned per deal.</p>
   <p style="margin-top:6px"><strong>Flow vs. validation rule:</strong> deciding <em>which</em> Pricebook applies has to be a Flow — it sets a value (Opportunity.Pricebook2Id), which a validation rule can't do. Checking whether the entered price is within Floor__c/Ceiling__c is the validation rule's job — a pure block/allow check. Either way, the actual rate + floor + ceiling for a carrier still has to be entered by Nick/Martha — the validation rule enforces against that data, it doesn't replace the need to build it.</p>
+  <p style="margin-top:6px"><strong>Native Salesforce behavior, without this Flow:</strong> Pricebook2Id does not auto-populate on its own. A rep clicking "Add Product" with no Pricebook set gets stopped and manually prompted to choose one before they can pick a specific product. The Flow's whole job is to pre-set Pricebook2Id when Carrier Association gets linked, so that prompt never appears — it's preventing default behavior, not describing it.</p>
 </div>
 <div class="wrap">
 <svg viewBox="0 0 1500 800" xmlns="http://www.w3.org/2000/svg" style="min-width:1180px;width:100%;height:auto;">
@@ -54,8 +55,8 @@
   <line x1="470" y1="68" x2="500" y2="68" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
 
   <rect x="500" y="40" width="210" height="56" rx="8" fill="#0d9488"/>
-  <text x="605" y="63" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Pricebook auto-assigns</text>
-  <text x="605" y="80" text-anchor="middle" font-size="9" fill="#99f6e4">Flow checks Preferred_Price_Book__c</text>
+  <text x="605" y="63" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Flow pre-sets Pricebook</text>
+  <text x="605" y="80" text-anchor="middle" font-size="9" fill="#99f6e4">runs before rep clicks Add Product</text>
   <circle cx="512" cy="52" r="5" fill="#0d9488"/>
 
   <line x1="605" y1="96" x2="605" y2="108" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
@@ -85,8 +86,8 @@
   <path d="M845,296 L845,320 L620,320 L620,340" fill="none" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
 
   <rect x="350" y="340" width="340" height="56" rx="8" fill="#0d9488"/>
-  <text x="520" y="363" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Rep adds line item(s)</text>
-  <text x="520" y="380" text-anchor="middle" font-size="9" fill="#99f6e4">anchor exposure type required to advance</text>
+  <text x="520" y="363" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Rep clicks Add Product</text>
+  <text x="520" y="380" text-anchor="middle" font-size="9" fill="#99f6e4">no Pricebook prompt · anchor rate required</text>
   <circle cx="362" cy="352" r="5" fill="#2563eb"/>
 
   <line x1="520" y1="396" x2="520" y2="420" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
