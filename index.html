@@ -28,6 +28,8 @@
   <p style="margin-top:6px"><strong>No Flow sets the Pricebook — this is a manual rep action, blocked if wrong.</strong> The rep clicks Add Product on the Opportunity, and that's the moment Salesforce natively prompts them to choose a Pricebook before they can pick a specific product. Preferred_Price_Book__c is a reference field, not automation — it doesn't set anything by itself, but the validation rule checks against it and hard-blocks the save if the rep picks wrong. Example: if the carrier is Accelerant (which has preferred pricing), the rep cannot save with the Standard Pricebook selected — the rule blocks it and forces them to pick Accelerant's book instead.</p>
   <p style="margin-top:6px"><strong>Changing a floor/ceiling or negotiated rate:</strong> edit access restricted to Nick/Martha via a permission set, with Field History Tracking on — tracked, not approval-gated. Changes aren't retroactive: a deal already quoted keeps the range it was checked against at the time; the live PricebookEntry is always "current," not versioned per deal.</p>
   <p style="margin-top:6px"><strong>Flow vs. validation rule:</strong> a validation rule can't set a value — it can only block or allow a save. So it can't pick the Pricebook for the rep; it can only catch it afterward if they picked the wrong one for this carrier. Checking whether the entered price is within Floor__c/Ceiling__c is the same kind of check — a pure block/allow. Either way, the actual rate + floor + ceiling for a carrier still has to be entered by Nick/Martha — the validation rule enforces against that data, it doesn't replace the need to build it.</p>
+  <p style="margin-top:6px"><strong>Example — anchor per LOB:</strong> an Auto-only deal requires one anchor: Auto Bodily Injury. An Auto + GL deal requires two: Auto Bodily Injury and GL's equivalent primary line. Litigation, Glass, Towing, Cargo, Trailer/Interchange, etc. are never required in V1, regardless of how many LOBs are in play.</p>
+  <p style="margin-top:6px"><strong>Open question for V2 — do ancillary lines need the same rigor?</strong> Glass, Towing, and Litigation Management likely vary far less than the anchor lines do (Auto BI swings widely by account; Glass is close to a fixed rate everywhere). V2 could add these without floor/ceiling approval gating at all — just a stable reference rate the rep applies, no Slack routing needed — reserving the approval process for the high-variance anchors only. Amount/revenue would still roll up off the anchor lines, not the ancillary ones, even once they exist in the system. This also sets up V3 cleanly: once the full exhibit is structured data in SFDC (anchors + ancillary), auto-generating an actual quote document becomes possible.</p>
 </div>
 <div class="wrap">
 <svg viewBox="0 0 1500 800" xmlns="http://www.w3.org/2000/svg" style="min-width:1180px;width:100%;height:auto;">
@@ -91,7 +93,7 @@
 
   <rect x="435" y="340" width="340" height="56" rx="8" fill="#15803d"/>
   <text x="605" y="363" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Rep selects the Product</text>
-  <text x="605" y="380" text-anchor="middle" font-size="9" fill="#bbf7d0">one anchor per LOB — not the full exhibit</text>
+  <text x="605" y="380" text-anchor="middle" font-size="9" fill="#bbf7d0">one anchor per LOB, e.g. Auto BI</text>
   <circle cx="447" cy="352" r="5" fill="#2563eb"/>
 
   <line x1="605" y1="396" x2="605" y2="420" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
