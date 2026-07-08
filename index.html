@@ -47,11 +47,15 @@
   <text x="36" y="324" font-size="12" font-weight="700" fill="#15803d">DEAL FLOW  ·  Proposal / RFP stage gate</text>
 
   <!-- ════ LANE A: PRICING SETUP ════ -->
-  <rect x="50" y="140" width="190" height="56" rx="8" fill="#4f46e5"/>
-  <text x="145" y="163" text-anchor="middle" font-size="12" font-weight="700" fill="#fff">Carrier Association</text>
-  <text x="145" y="180" text-anchor="middle" font-size="9" fill="#c7d2fe">junction: Opportunity ↔ Carrier · rep-created</text>
-  <circle cx="62" cy="152" r="5" fill="#2563eb"/>
+  <polygon points="145,120 240,168 145,216 50,168" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="145" y="163" text-anchor="middle" font-size="9" font-weight="700" fill="#92400e">Carrier has</text>
+  <text x="145" y="176" text-anchor="middle" font-size="9" font-weight="700" fill="#92400e">negotiated pricing?</text>
+  <circle cx="145" cy="136" r="5" fill="#4b5563"/>
 
+  <line x1="145" y1="216" x2="145" y2="230" stroke="#999" stroke-width="1.5" marker-end="url(#a)"/>
+  <text x="145" y="244" text-anchor="middle" font-size="8" fill="#6b7280">no — uses Standard, nothing to build</text>
+
+  <text x="255" y="158" text-anchor="middle" font-size="8.5" font-weight="600" fill="#374151">yes</text>
   <line x1="240" y1="168" x2="270" y2="168" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
 
   <rect x="270" y="140" width="220" height="56" rx="8" fill="#fff" stroke="#4f46e5" stroke-width="1.5"/>
@@ -82,11 +86,10 @@
   <circle cx="982" cy="152" r="5" fill="#4b5563"/>
 
   <!-- relationship lines down to deal flow -->
-  <path d="M380,196 L380,340 L360,340 L360,360" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#ab)"/>
-  <path d="M615,196 L615,340 L605,340 L605,360" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#ab)"/>
+  <path d="M380,196 L380,330 L430,330 L430,425 L360,425 L360,440" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#ab)"/>
+  <path d="M615,196 L615,502 L450,502" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#ab)"/>
   <path d="M1090,196 L1090,630 L650,630 L650,660" fill="none" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#ab)"/>
   <text x="870" y="620" text-anchor="middle" font-size="9" font-weight="600" fill="#2563eb">guardrail</text>
-  <text x="625" y="344" text-anchor="start" font-size="9" font-weight="600" fill="#2563eb">auto-applies to every deal — no manual pick required</text>
 
   <!-- ════ LANE B: DEAL FLOW ════ -->
   <rect x="50" y="360" width="170" height="56" rx="8" fill="#15803d"/>
@@ -94,14 +97,25 @@
   <text x="135" y="400" text-anchor="middle" font-size="9" fill="#bbf7d0">linked to Carrier Association</text>
   <circle cx="62" cy="372" r="5" fill="#2563eb"/>
 
-  <line x1="220" y1="388" x2="250" y2="388" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
+  <line x1="220" y1="388" x2="245" y2="378" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
 
-  <rect x="250" y="360" width="220" height="56" rx="8" fill="#fff" stroke="#15803d" stroke-width="1.5"/>
-  <text x="360" y="383" text-anchor="middle" font-size="11" font-weight="600" fill="#111">Flow checks Carrier Association</text>
-  <text x="360" y="400" text-anchor="middle" font-size="9" fill="#6b7280">reads Preferred_Price_Book__c</text>
-  <circle cx="262" cy="372" r="5" fill="#0d9488"/>
+  <polygon points="320,344 395,378 320,412 245,378" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
+  <text x="320" y="374" text-anchor="middle" font-size="8.5" font-weight="700" fill="#92400e">Carrier Association</text>
+  <text x="320" y="386" text-anchor="middle" font-size="8.5" font-weight="700" fill="#92400e">linked?</text>
+  <circle cx="320" cy="352" r="5" fill="#0d9488"/>
 
-  <line x1="360" y1="416" x2="360" y2="440" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
+  <text x="340" y="420" text-anchor="middle" font-size="8.5" font-weight="600" fill="#374151">yes</text>
+  <line x1="320" y1="412" x2="360" y2="440" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
+
+  <text x="420" y="368" text-anchor="middle" font-size="8.5" font-weight="600" fill="#374151">no</text>
+  <line x1="395" y1="378" x2="650" y2="378" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
+
+  <rect x="650" y="350" width="280" height="56" rx="8" fill="#fff" stroke="#0d9488" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="790" y="373" text-anchor="middle" font-size="10.5" font-weight="600" fill="#111">No Carrier Association</text>
+  <text x="790" y="390" text-anchor="middle" font-size="8.5" fill="#6b7280">defaults straight to Standard Pricebook</text>
+  <circle cx="662" cy="362" r="5" fill="#0d9488"/>
+
+  <path d="M790,406 L790,540 L650,540 L650,560" fill="none" stroke="#999" stroke-width="2" marker-end="url(#a)"/>
 
   <polygon points="360,440 450,482 360,524 270,482" fill="#fef3c7" stroke="#d97706" stroke-width="2"/>
   <text x="360" y="478" text-anchor="middle" font-size="10" font-weight="700" fill="#92400e">Carrier has preferred</text>
